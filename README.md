@@ -96,16 +96,6 @@ console.log("Left:", store.remaining());     // 4100
 | 80% or more spent | `warning` | ₹4200 spent, ₹800 left |
 | More than the budget | `over` | ₹5600 spent, ₹600 over |
 
-## Roadmap
-
-- [ ] **Step 0:** Project setup (`package.json`, `tsconfig.json`, `npm run dev` prints a message)
-- [ ] **Step 1:** `types.ts`: `Category`, `Expense`, `NewExpense`
-- [ ] **Step 2:** `store.ts`: `ExpenseStore` with `add`, `list`, `totalSpent`, `remaining`
-- [ ] **Step 3:** `index.ts`: set a budget, add sample expenses, print the remaining balance
-- [ ] **Step 4:** `store.ts`: `remove` and `update`
-- [ ] **Step 5:** `report.ts`: `checkBudget` (ok / warning / over) and totals per category
-- [ ] **Step 6:** `report.ts`: generic `topN<T>` for the biggest expenses
-- [ ] **Bonus:** Save and load expenses from a JSON file (`async`/`await`, `node:fs/promises`, type guard)
 
 ## TypeScript concepts practised
 
@@ -120,10 +110,3 @@ console.log("Left:", store.remaining());     // 4100
 | Generics | `topN<T>` |
 | ES modules and `import type` | imports between files |
 | `async`/`await` and type guards | bonus: JSON save/load |
-
-## Notes
-
-- `package.json` has `"type": "module"`, so files use `import`/`export`.
-- Import paths end in `.js` even inside `.ts` files, e.g. `import { ExpenseStore } from "./store.js";`, because that is the file Node runs after compiling.
-- Import types with `import type { Expense } from "./types.js";` (required by `verbatimModuleSyntax`).
-- The JSON save bonus needs Node's types: `npm i -D @types/node` and `"types": ["node"]` in `tsconfig.json`.
