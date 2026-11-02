@@ -2,7 +2,7 @@ import type { Expense, newExpences } from "./type.js";
 export default class ExpenseStore{
     private expense: Expense[] = [];
     private nextId: number = 1;
-    public budget: number;
+    public budget: number=0;
     constructor(budget: number) {
         this.budget = budget;
     }
@@ -43,5 +43,23 @@ export default class ExpenseStore{
         }
         console.log(`Not found this ${id}`);
         return false;
+    }
+    checkBudget(): "ok"|"warning"|"over"{
+        const spent: number = this.totalSpent();
+        if (spent > this.budget) return "over";
+        else if (spent >= Math.floor(this.budget * .80))
+            return "warning";
+        else return "ok";
+    }
+    describe():string {
+        const message = this.checkBudget();
+        switch (message) {
+            case "ok":
+                return `sab theek hai ₹${this.remaining()} maje lo`;
+            case "warning":
+                return `Dhayan do bas sirf itna bacha hai ₹${this.remaining()}`;
+            default:
+                return `Budget se ₹${Math.abs(this.remaining())} zyaada!`;
+        }
     }
 }
