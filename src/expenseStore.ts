@@ -21,4 +21,27 @@ export default class ExpenseStore{
     {
         const total = this.totalSpent();
         return this.budget - total;
-}}
+    }
+    update(id: number, data: Partial<newExpences>): Expense|undefined{
+        for (const [i, exp] of this.expense.entries()) {
+            if (exp.id === id) {
+                this.expense[i] = { ...exp, ...data };
+                console.log("Update successfully");
+                return this.expense[i];
+            }
+        }
+        console.log(`Not found this ${id}`);
+        return undefined;
+    }
+    remove(id: number):boolean {
+         for (const [i, exp] of this.expense.entries()) {
+            if (exp.id === id) {
+                this.expense.splice(i,1);
+                console.log("deleted successfully");
+                return true;
+            }
+        }
+        console.log(`Not found this ${id}`);
+        return false;
+    }
+}

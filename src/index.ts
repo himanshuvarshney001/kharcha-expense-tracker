@@ -22,3 +22,11 @@ store.add(nexp);
 console.log(store.totalSpent());
 console.log(store.remaining());
 
+const a = store.add({ amount: 300, category: "food", note: "Chai", date: "2026-11-02" });
+const b = store.add({ amount: 600, category: "travel", note: "Train", date: "2026-11-02" });
+
+console.log(store.update(a.id, { amount: 350 }));   // amount 350 wala object
+console.log(store.update(99, { amount: 1 }));       // undefined
+console.log(store.remove(b.id));                    // true
+console.log(store.remove(b.id));                    // false (pehle hi hat gaya)
+console.log(store.list());                          // sirf Chai, 350
