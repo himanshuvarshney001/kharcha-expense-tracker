@@ -6,7 +6,11 @@ export default class ExpenseStore{
     constructor(budget: number) {
         this.budget = budget;
     }
-    add(data: newExpences): Expense{
+    add(data: newExpences): Expense|undefined{
+        if (data.amount <= 0) {
+            throw new Error("Enter valid Amount");
+            
+        }
         this.expense.push({ id: this.nextId, ...data });
         return {id:this.nextId++,...data};
 
@@ -23,7 +27,7 @@ export default class ExpenseStore{
         return this.budget - total;
     }
     update(id: number, data: Partial<newExpences>): Expense|undefined{
-        for (const [i, exp] of this.expense.entries()) {
+        for (const [i, exp] of this.expense.entries() ) {
             if (exp.id === id) {
                 this.expense[i] = { ...exp, ...data };
                 console.log("Update successfully");
