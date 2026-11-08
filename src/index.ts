@@ -1,46 +1,46 @@
-import type { Expense, newExpences } from "./type.js";
 import ExpenseStore from "./expenseStore.js";
-const exp: Expense = {
-    id: 12,
-    category: "food",
-    amount: 400,
-    note: "the taste of food desent",
-    date: "2024-11-04",
-};
+import type { newExpences } from "./type.js";
 
-const nexp: newExpences = {  
-    category: "travel",
-    amount: 4000,
-    note: "travelling is good for human",
-    date:"2022-09-11",
+console.log("===== Kharcha Tracker =====\n");
+
+// 1. Mahine ka budget set karo
+const store = new ExpenseStore(5000);
+console.log(`Budget: ₹${store.budget}\n`);
+
+// 2. Kharche add karo
+const kharche: newExpences[] = [
+  { amount: 1200, category: "rent", note: "Room ka hissa", date: "2026-11-01" },
+  { amount: 250, category: "food", note: "Mess dinner", date: "2026-11-02" },
+  { amount: 600, category: "travel", note: "Train ticket", date: "2026-11-03" },
+  { amount: 80, category: "food", note: "Chai aur samosa", date: "2026-11-03" },
+  { amount: 1500, category: "shopping", note: "Jacket", date: "2026-11-05" },
+];
+
+for (const k of kharche) {
+  store.add(k);
 }
 
-const store = new ExpenseStore(5000);
-store.add(nexp);
-store.add(nexp);
+console.log("Saare kharche:");
+console.table(store.list());
 
-console.log(store.totalSpent());
-console.log(store.remaining());
+// 3. Galti sudhaaro: chai ₹80 nahi, ₹60 ki thi
+const chai = store.list().find((e) => e.note === "Chai aur samosa");
+if (chai) store.update(chai.id, { amount: 60 });
 
-const a = store.add({ amount: 300, category: "food", note: "Chai", date: "2026-11-02" });
-const b = store.add({ amount: 600, category: "travel", note: "Train", date: "2026-11-02" });
+// 4. Jacket wapas kar di
+const jacket = store.list().find((e) => e.note === "Jacket");
+if (jacket) store.remove(jacket.id);
 
-console.log(store.update(a!.id, { amount: 350 }));   // amount 350 wala object
-console.log(store.update(99, { amount: 1 }));       // undefined
-console.log(store.remove(b!.id));                    // true
-console.log(store.remove(b!.id));                    // false (pehle hi hat gaya)
-console.log(store.list());                          // sirf Chai, 350\
+// 5. Report
+console.log("\n----- Report -----");
+console.log(`Kharch hua: ₹${store.totalSpent()}`);
+console.log(`Bacha:      ₹${store.remaining()}`);
+console.log(`Status:     ${store.checkBudget()} (${store.describe()})`);
+console.log("Category-wise:", store.totalByCategory());
 
-const s1 = new ExpenseStore(5000);
-s1.add({ amount: 1900, category: "food", note: "Mess", date: "2026-11-02" });
-console.log(s1.checkBudget(),s1.describe());
+// 6. Ek bada kharcha aaya: warning dikhao, rokna nahi
+store.add({ amount: 2200, category: "other", note: "Laptop repair", date: "2026-11-08" });
 
-
-const s2 = new ExpenseStore(5000);
-s2.add({ amount: 4000, category: "rent", note: "Room", date: "2026-11-02" });
-console.log(s2.checkBudget(), s2.describe());   // warning (exactly 80%)
-
-console.log(store.checkBudget(), store.describe());   // over (tumhara 8000 wala store)np
-console.log("result");
-console.log(store.list());
-console.log(store.totalByCategory());
+if (store.checkBudget() !== "ok") {
+  console.log(`\nWarning: ${store.describe()}`);
+}
