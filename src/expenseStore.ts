@@ -1,4 +1,4 @@
-import type { Expense, newExpences } from "./type.js";
+import type { Category, Expense, newExpences,categoryType } from "./type.js";
 export default class ExpenseStore{
     private expense: Expense[] = [];
     private nextId: number = 1;
@@ -65,5 +65,12 @@ export default class ExpenseStore{
             default:
                 return `Budget se ₹${Math.abs(this.remaining())} zyaada!`;
         }
+    }
+    totalByCategory(): Partial<Record<Category, number>> {
+        const dabba: categoryType = {};
+        return this.expense.reduce((acc, exp) => {
+            acc[exp.category] = (acc[exp.category] || 0) + exp.amount;
+            return acc;
+        },dabba)
     }
 }

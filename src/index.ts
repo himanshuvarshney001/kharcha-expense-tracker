@@ -41,3 +41,6 @@ s2.add({ amount: 4000, category: "rent", note: "Room", date: "2026-11-02" });
 console.log(s2.checkBudget(), s2.describe());   // warning (exactly 80%)
 
 console.log(store.checkBudget(), store.describe());   // over (tumhara 8000 wala store)np
+console.log("result");
+console.log(store.list());
+console.log(store.totalByCategory());

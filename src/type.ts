@@ -1,4 +1,4 @@
-type Category = "food" | "travel" | "rent" | "shopping" | "other";//type literal
+export type Category = "food" | "travel" | "rent" | "shopping" | "other";//type literal
 //Making user Defined type
 export type Expense = {
     readonly id: number,
@@ -7,4 +7,5 @@ export type Expense = {
     note: string;
     date: string;
 };
+export type categoryType = Partial<Record<Category, number>>;
 export type newExpences= Omit<Expense, 'id'>;
