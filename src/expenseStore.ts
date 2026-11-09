@@ -59,11 +59,11 @@ export default class ExpenseStore{
         const message = this.checkBudget();
         switch (message) {
             case "ok":
-                return `sab theek hai ₹${this.remaining()} maje lo`;
+                return `sab theek hai budget ₹${this.remaining()} maje lo`;
             case "warning":
-                return `Dhayan do bas sirf itna bacha hai ₹${this.remaining()}`;
+                return `Dhayan do bas sirf itna bacha hai budget ₹${this.remaining()}`;
             default:
-                return `Budget se ₹${Math.abs(this.remaining())} zyaada!`;
+                return `Budget se budget ₹${Math.abs(this.remaining())} zyaada!`;
         }
     }
     totalByCategory(): Partial<Record<Category, number>> {

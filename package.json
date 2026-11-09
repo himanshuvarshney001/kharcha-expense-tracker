@@ -4,10 +4,11 @@
   "description": "A small command-line expense tracker written in TypeScript. Set a monthly budget, add your expenses, and see how much you have left.",
   "main": "index.js",
   "scripts": {
-    "build":"tsc",
-    "start":"node dist/index.js",
-    "dev":"tsc && node dist/index.js",
-    "watch":"tsc --watch"
+    "app":"tsc && node dist/app.js",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsc && node dist/index.js",
+    "watch": "tsc --watch"
   },
   "repository": {
     "type": "git",
@@ -22,6 +23,7 @@
   },
   "homepage": "https://github.com/himanshuvarshney001/kharcha-expense-tracker#readme",
   "devDependencies": {
+    "@types/node": "^26.6.6",
     "typescript": "^7.0.2"
   }
 }
