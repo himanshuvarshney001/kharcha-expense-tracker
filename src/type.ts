@@ -1,5 +1,9 @@
-export type Category = "food" | "travel" | "rent" | "shopping" | "other";//type literal
-//Making user Defined type
+export const CATEGORIES = ["food", "travel", "rent", "shopping", "other"] as const;
+export type Category = (typeof CATEGORIES)[number];
+
+export function isCategory(s: string): s is Category {
+    return CATEGORIES.some((c) => c === s);
+}
 export type Expense = {
     readonly id: number,
     amount: number;

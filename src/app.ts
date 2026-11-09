@@ -1,8 +1,25 @@
 import { createInterface } from "node:readline/promises";
 import { stdin, stdout } from "node:process";
 import expenseStore from "./expenseStore.js";
+import { CATEGORIES, isCategory } from "./type.js";
 import type { Category } from "./type.js";
 
+async function askNumber(sawaal: string, attempts: number = 3): Promise<number | undefined> {
+    for (let i = 1; i <= attempts; i++) {
+        const n = Number(await rl.question(sawaal));
+        if (!Number.isNaN(n) && n > 0) return n;
+        console.log(`Galat number. ${attempts - i} try bache`);
+    }
+    return undefined;   // saare try khatam
+}
+async function askCategory(attempts: number = 3): Promise<Category | undefined> {
+    for (let i = 1; i <= attempts; i++) {
+        const jawab = (await rl.question(`Category (${CATEGORIES.join("/")})? `)).trim().toLowerCase();
+        if (isCategory(jawab)) return jawab;   // yahan TS jaanta hai: jawab ek Category hai
+        console.log(`"${jawab}" koi category nahi hai. ${attempts - i} try bache`);
+    }
+    return undefined;
+}
 const users = new Map<string, expenseStore>();
 let currentUser = "";
 let store: expenseStore;
@@ -14,17 +31,12 @@ if (found) {
     store = found;
 }
 else {
-    let budget: string = await rl.question("Mahine ka budget? ");
-    while (true) {
-        if (
-            !Number.isNaN(Number(budget)) &&
-            Number(budget) > 0
-        )
-            break;
-        else console.log("Enter valid integer");
-        budget = await rl.question("Mahine ka budget? ");
+    let budget = await askNumber("Enter budget in integer?");
+    if (!budget) {
+        rl.close();
+        process.exit(1);
     }
-    store = new expenseStore(Number(budget));
+    store = new expenseStore(budget);
     users.set(user, store);
     currentUser = user;
 }
@@ -42,15 +54,10 @@ while (chalu) {
                 store = found;
             }
             else {
-                let budget: string = await rl.question("Mahine ka budget? ");
-                while (true) {
-                    if (
-                        !Number.isNaN(Number(budget)) &&
-                        Number(budget) > 0
-                    )
-                        break;
-                    else console.log("Enter valid integer");
-                    budget = await rl.question("Mahine ka budget? ");
+                let budget = await askNumber("Enter amount budget?");
+                if (!budget) {
+                    console.log("user nahi bana");
+                    break;
                 }
                 store = new expenseStore(Number(budget));
                 users.set(user, store);
@@ -61,13 +68,19 @@ while (chalu) {
         case "1":
             {
                 let category, note, amount, date;
-                console.log("Enter category from that (food,rent,shopping,travel,other)");
-                category = (await rl.question("Category? ")).toLowerCase() as Category;
-                console.log("Enter amount in integer");
-                amount = Number(await rl.question("Amount? "));
+                category = await askCategory();
+                if (!category) {
+                    console.log("category nahi mili Kharcha cancel ")
+                    break;
+                }
+                amount = await askNumber("Enter amount in integer?");
+                if (!amount) {
+                    console.log("Not enter valid amount to kharch cancel ");
+                    break;
+                }
+
                 note = await rl.question("note? ");
                 date = await rl.question("date? ");
-
                 store.add({ amount, category, note, date });
                 if (store.checkBudget() !== "ok") console.log(store.describe());
                 break;
