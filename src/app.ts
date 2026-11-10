@@ -4,7 +4,7 @@ import expenseStore from "./expenseStore.js";
 import { CATEGORIES, isCategory } from "./type.js";
 import type { Category } from "./type.js";
 import type { saveFile } from "./type.js";
-import { writeFile,readFile } from "node:fs/promises"
+import { writeFile, readFile } from "node:fs/promises"
 
 
 const users = new Map<string, expenseStore>();
@@ -17,7 +17,7 @@ async function save(): Promise<void> {
     await writeFile("expenses.json", text);
 }
 
-async function load(): Promise<void>{
+async function load(): Promise<void> {
     let text: string;
     try {
         text = await readFile('expenses.json', "utf-8");
@@ -26,7 +26,7 @@ async function load(): Promise<void>{
     }
     const data = JSON.parse(text) as saveFile;
     for (const [key, value] of Object.entries(data)) {
-        users.set(key,expenseStore.fromData(value));
+        users.set(key, expenseStore.fromData(value));
     }
 }
 async function askNumber(sawaal: string, attempts: number = 3): Promise<number | undefined> {

@@ -39,7 +39,12 @@ console.log(`Status:     ${store.checkBudget()} (${store.describe()})`);
 console.log("Category-wise:", store.totalByCategory());
 
 // 6. Ek bada kharcha aaya: warning dikhao, rokna nahi
-store.add({ amount: 2200, category: "other", note: "Laptop repair", date: "2026-11-08" });
+store.add({
+  amount: 2200,
+  category: "other",
+  note: "Laptop repair",
+  date: "2026-11-08",
+});
 
 if (store.checkBudget() !== "ok") {
   console.log(`\nWarning: ${store.describe()}`);
@@ -49,8 +54,8 @@ console.log(store.list());
 
 const copy = ExpenseStore.fromData(store.toData());
 copy.add({ amount: 10, category: "food", note: "Test", date: "2026-11-10" });
-console.log(copy.list().at(-1)?.id);      // 7
+console.log(copy.list().at(-1)?.id); // 7
 
 const empty = ExpenseStore.fromData({ budget: 1000, expences: [] });
 empty.add({ amount: 10, category: "food", note: "Test", date: "2026-11-10" });
-console.log(empty.list()[0]?.id);         // 1
+console.log(empty.list()[0]?.id); // 1
