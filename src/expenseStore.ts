@@ -1,10 +1,17 @@
-import type { Category, Expense, newExpences,categoryType } from "./type.js";
+import type { Category, Expense, newExpences, categoryType } from "./type.js";
+import type { StoreData,saveFile } from "./type.js";
 export default class ExpenseStore{
     private expense: Expense[] = [];
     private nextId: number = 1;
     public budget: number=0;
     constructor(budget: number) {
         this.budget = budget;
+    }
+    static fromData(data: StoreData): ExpenseStore{
+        const s = new ExpenseStore(data.budget);
+        s.expense = [...data.expences];
+        s.nextId = (Math.max(0,...(s.expense.map(({id})=>id))))+1;
+        return s;
     }
     add(data: newExpences): Expense|undefined{
         if (data.amount <= 0) {
@@ -72,5 +79,8 @@ export default class ExpenseStore{
             acc[exp.category] = (acc[exp.category] || 0) + exp.amount;
             return acc;
         },dabba)
+    }
+    toData():StoreData {
+        return { budget: this.budget, expences: [...this.expense] };
     }
 }

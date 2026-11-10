@@ -3,7 +3,32 @@ import { stdin, stdout } from "node:process";
 import expenseStore from "./expenseStore.js";
 import { CATEGORIES, isCategory } from "./type.js";
 import type { Category } from "./type.js";
+import type { saveFile } from "./type.js";
+import { writeFile,readFile } from "node:fs/promises"
 
+
+const users = new Map<string, expenseStore>();
+async function save(): Promise<void> {
+    const data: saveFile = {};
+    for (const [key, value] of users) {
+        data[key] = value.toData();
+    }
+    const text = JSON.stringify(data, null, 2);
+    await writeFile("expenses.json", text);
+}
+
+async function load(): Promise<void>{
+    let text: string;
+    try {
+        text = await readFile('expenses.json', "utf-8");
+    } catch {
+        return;
+    }
+    const data = JSON.parse(text) as saveFile;
+    for (const [key, value] of Object.entries(data)) {
+        users.set(key,expenseStore.fromData(value));
+    }
+}
 async function askNumber(sawaal: string, attempts: number = 3): Promise<number | undefined> {
     for (let i = 1; i <= attempts; i++) {
         const n = Number(await rl.question(sawaal));
@@ -20,13 +45,14 @@ async function askCategory(attempts: number = 3): Promise<Category | undefined> 
     }
     return undefined;
 }
-const users = new Map<string, expenseStore>();
 let currentUser = "";
 let store: expenseStore;
 const rl = createInterface({ input: stdin, output: stdout });
+await load();
 let user = await rl.question("Enter user name? ");
 let found = users.get(user);
 if (found) {
+    console.log("Welcome back");
     currentUser = user;
     store = found;
 }
@@ -50,6 +76,7 @@ while (chalu) {
             user = await rl.question("Enter user name? ");
             found = users.get(user);
             if (found) {
+                console.log("Welcome back");
                 currentUser = user;
                 store = found;
             }
@@ -89,7 +116,7 @@ while (chalu) {
             {
                 const result = store.list();
                 if (result.length === 0) console.log("Abhi koi kharcha nahi hai(store khali hai)");
-                else console.log(result);
+                else console.table(result);
                 break;
             }
         case "3":
@@ -98,11 +125,12 @@ while (chalu) {
                 console.log(store.totalByCategory());
                 break;
             }
-        case "5":
-            {
-                chalu = false;
-                break;
-            }
+        case "5": {
+            await save();
+            console.log("Data save ho gaya. Bye!");
+            chalu = false;
+            break;
+        }
         case "4": {
             console.log("user is " + currentUser);
             break;

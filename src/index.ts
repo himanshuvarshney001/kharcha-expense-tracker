@@ -44,3 +44,13 @@ store.add({ amount: 2200, category: "other", note: "Laptop repair", date: "2026-
 if (store.checkBudget() !== "ok") {
   console.log(`\nWarning: ${store.describe()}`);
 }
+console.log(store.toData());
+console.log(store.list());
+
+const copy = ExpenseStore.fromData(store.toData());
+copy.add({ amount: 10, category: "food", note: "Test", date: "2026-11-10" });
+console.log(copy.list().at(-1)?.id);      // 7
+
+const empty = ExpenseStore.fromData({ budget: 1000, expences: [] });
+empty.add({ amount: 10, category: "food", note: "Test", date: "2026-11-10" });
+console.log(empty.list()[0]?.id);         // 1
